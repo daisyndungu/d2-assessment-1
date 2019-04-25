@@ -13,7 +13,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // identify environment
 const env = process.env.NODE_ENV;
 // establish db connection
-mongoose.connect(config[env].DATABASE_URL);
+mongoose.connect(
+    config[env].DATABASE_URL,
+    { useCreateIndex: true,
+    useNewUrlParser: true });
 const db = mongoose.connection;
 const port = process.env.PORT || 8000;
 
