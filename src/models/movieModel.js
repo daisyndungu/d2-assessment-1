@@ -23,8 +23,8 @@ const movie = new Schema({
     category: {type: String, required: true},
     startDate: {type: Date, required: true},
     endDate: {type: Date, required: true},
-    showingNo: {type: Number, required: true, default: 0, max: 10, min: 0},
-    showingTime: {type: Array, required: true, validate: [showingTimeValidator, "Showing Time should not exceed 10 time per day"] }
+    showingNo: {type: Number, required: true, max: 10, min: 0},
+    showingTime: {type: Array, validate: [showingTimeValidator, "Showing Time should not exceed 10 time per day"] }
 });
 
 module.exports = mongoose.model('movies', movie);

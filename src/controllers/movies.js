@@ -1,6 +1,9 @@
 const Movie = require('../models/movieModel');
 
 function addNewMovieRecord(req, res) {
+    if (req.body.showingTime && req.body.showingNo && req.body.showingNo < req.body.showingTime.length) {
+        return res.status(400).send({ message: "Showing number should be greater or equal to the no of showing times" });
+    }
     const movie = new Movie(req.body);
     movie.save((err, movies) => {
         if(movies){
