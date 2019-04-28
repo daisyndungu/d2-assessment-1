@@ -9,12 +9,12 @@ router.get('', (req, res) => {
 });
 
 // Users
-router.post('/users', User.addNewUser);
-router.get('/users', User.getAllUsers);
+router.post('/admin/users', User.addNewUser);
+router.get('/admin/users', User.getAllUsers);
 
 // Movies
-router.post('/movies', User.isAdmin ,Movie.addNewMovieRecord);
-router.get('/movies', Movie.displayAllMovies);
+router.post('/admin/movies', User.isAdmin ,Movie.addNewMovieRecord);
+router.get('/admin/movies', Movie.displayAllMovies);
 router.get('/movies/:id', Movie.getMovieByID);
 router.put('/movies/:id', Movie.editMovieRecord);
 router.delete('/movies/:id', Movie.deleteMovieByID);

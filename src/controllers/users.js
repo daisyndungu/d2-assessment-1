@@ -35,4 +35,18 @@ function isAdmin(req, res, next) {
     }
 }
 
-module.exports = { isAdmin, addNewUser, getAllUsers}
+function isStaff(req, res, next) {
+    if (req.body.email) {
+        User.find({ email: req.body.email }, (err, user) => {
+            if (!user) {
+                return res.status(400).send({ message: 'User not found' });
+            } else if (user && user[0].permissions === 'staff') {
+                next();
+            } else {
+                return res.status(400).send({ message: 'Unathorized user', err })
+            }
+        });
+    }
+}
+
+module.exports = { addNewUser, getAllUsers, isAdmin, isStaff }
