@@ -21,15 +21,13 @@ function getAllUsers(req, res) {
     })
 }
 
-function isAdmin(req, res) {
-    let isAdmin = false;
+function isAdmin(req, res, next) {
     if(req.body.email){
-        User.find({ email: req.body.email}, (user, err) => {
+        User.find({ email: req.body.email}, (err, user) => {
             if (!user){
                return res.status(400).send({ message: 'User not found' });
-            } else if(user && user.permissions === 'admin'){
-                isAdmin = true;
-                return isAdmin;
+            } else if (user && user[0].permissions === 'admin'){
+                next();
             } else {
                 return res.status(400).send({message: 'Unathorized user', err})
             }
