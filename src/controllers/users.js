@@ -49,4 +49,18 @@ function isStaff(req, res, next) {
     }
 }
 
-module.exports = { addNewUser, getAllUsers, isAdmin, isStaff }
+function isUser(req, res, next) {
+    if(req.body.email){
+        User.find({ email: req.body.email }, (err, user) => {
+            if (!user) {
+                return res.status(400).send({ message: 'User not found' });
+            } else if (user) {
+                next();
+            } else {
+                return res.status(400).send({ message: 'Unathorized user', err })
+            }
+        });
+    }
+}
+
+module.exports = { addNewUser, getAllUsers, isAdmin, isStaff, isUser }
