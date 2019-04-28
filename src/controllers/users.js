@@ -32,6 +32,8 @@ function isAdmin(req, res, next) {
                 return res.status(400).send({message: 'Unathorized user', err})
             }
         });
+    } else {
+        return res.status(400).send({ message: 'Please provide user email' })
     }
 }
 
@@ -40,7 +42,8 @@ function isStaff(req, res, next) {
         User.find({ email: req.body.email }, (err, user) => {
             if (!user) {
                 return res.status(400).send({ message: 'User not found' });
-            } else if (user && user[0].permissions === 'staff') {
+            } else if (user && user[0].permissions === 'staff' || user[0].permissions === 'admin') {
+                // Admin has rights to perform operationst that a staff can perform
                 next();
             } else {
                 return res.status(400).send({ message: 'Unathorized user', err })

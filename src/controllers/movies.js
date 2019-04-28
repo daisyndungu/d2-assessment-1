@@ -33,6 +33,27 @@ function displayAllMovies(req, res){
     }
 }
 
+function displayAllActiveMovies(req, res) {
+    const currentDate = new Date();
+    if (req.query.category) {
+        Movie.find({ category: req.query.category, endDate: { '$gte': currentDate } }, (err, movies) => {
+            if (movies) {
+                return res.status(200).send({ message: "Movies by category", movies });
+            } else {
+                return res.status(500).send({ message: "An error occurred", err });
+            }
+        });
+    } else {
+        Movie.find({endDate: { '$gte': currentDate }}, (err, movies) => {
+            if (movies) {
+                return res.status(200).send({ message: "All Popular movies", movies });
+            } else {
+                return res.status(500).send({ message: "Could not fetch all movies, please try again", err });
+            }
+        });
+    }
+}
+
 // retrives movie record using it's id
 function getMovieByID(req, res){
     Movie.findById({_id: req.params.id}, (err, movie) => {
@@ -54,21 +75,27 @@ function editMovieRecord(req, res){
     });
 }
 
-function deleteMovieByID(req, res){
-    Movie.findByIdAndRemove({_id: req.params.id}, (err, movie) => {
-        if(movie){
-            return res.status(200).send({message: "Movie deleted!!!"});
+function deleteMovieByID(req, res) {
+    const currentDate = new Date();
+    Movie.findByIdAndDelete({_id: req.params.id})
+    .and([
+        {endDate:{ '$lt': currentDate } }
+    ])
+    .exec((err, movie) => {
+        if (movie) {
+            return res.status(200).send({ message: "Movie deleted", movie });
         } else {
-            return res.status(500).send({message: "Unable to delete, please try again", err});
+            return res.status(500).send({ message: "Unable to delete, the end date is still valid", err });
         }
     });
 }
 
 function deleteByCategory(req, res){
+    const currentDate = new Date();
     if(req.query.category){
-        Movie.deleteMany({category: req.query.category}, (err) => {
+        Movie.deleteMany({ category: req.query.category, endDate: { '$lt': currentDate } }, (err, movies) => {
             if(err){
-                return res.status(500).send({message: "Unable to delete by category. Ensure you provide the right category", err});
+                return res.status(500).send({message: "Unable to delete by category. The end date is still valid"});
             } else {
                 return res.status(200).send({message: "Movies deleted by Category"});
             }
@@ -89,4 +116,4 @@ function getAllMoviesByActor(req, res){
     });
 }
 
-module.exports = {addNewMovieRecord, displayAllMovies, getMovieByID, editMovieRecord, deleteMovieByID, deleteByCategory, getAllMoviesByActor}
+module.exports = { addNewMovieRecord, displayAllMovies, getMovieByID, editMovieRecord, deleteMovieByID, deleteByCategory, getAllMoviesByActor, displayAllActiveMovies}

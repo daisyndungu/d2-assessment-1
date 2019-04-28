@@ -9,15 +9,20 @@ router.get('', (req, res) => {
 });
 
 // Users
-router.post('/admin/users', User.addNewUser);
-router.get('/admin/users', User.getAllUsers);
+router.post('/admin/users', User.isAdmin ,User.addNewUser);
+router.get('/admin/users', User.isAdmin, User.getAllUsers);
 
 // Movies
 router.post('/admin/movies', User.isAdmin ,Movie.addNewMovieRecord);
-router.get('/admin/movies', Movie.displayAllMovies);
-router.get('/movies/:id', Movie.getMovieByID);
-router.put('/movies/:id', Movie.editMovieRecord);
-router.delete('/movies/:id', Movie.deleteMovieByID);
-router.delete('/movies', Movie.deleteByCategory);
-router.get('/movies/actors/:actor', Movie.getAllMoviesByActor)
+
+router.delete('/admin/movies/:id', User.isAdmin, Movie.deleteMovieByID);
+router.delete('/admin/movies', User.isAdmin, Movie.deleteByCategory);
+
+router.put('/admin/movies/:id', User.isAdmin, Movie.editMovieRecord);
+// router.put('/admin/movies/:id/showings', User.isStaff, Movie.editMovieShowingTimeAndNo);
+
+router.get('/admin/movies', User.isStaff, Movie.displayAllMovies);
+router.get('/movies', User.isUser, Movie.displayAllActiveMovies);
+router.get('/movies/:id', User.isUser, Movie.getMovieByID);
+router.get('/movies/actors/:actor', User.isUser, Movie.getAllMoviesByActor)
 module.exports = router;
