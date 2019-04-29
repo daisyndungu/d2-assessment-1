@@ -9,7 +9,7 @@ router.get('', (req, res) => {
 });
 
 // Users
-router.post('/admin/users', User.isAdmin ,User.addNewUser);
+router.post('/admin/users', User.addNewUser);
 router.get('/admin/users', User.isAdmin, User.getAllUsers);
 
 // Movies

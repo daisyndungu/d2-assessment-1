@@ -29,4 +29,6 @@ db.once('open',function(){
 });
 
 app.use('/api/v1', routes);
+
+module.exports = app
     
