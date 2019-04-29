@@ -1,7 +1,6 @@
 process.env.NODE_ENV = 'test';
 
 const User = require('../src/models/userModel');
-const userController = require('../src/controllers/users')
 
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
@@ -68,7 +67,7 @@ describe('Users', () => {
     describe('/GET Users', () => {
         it('it should get all users', (done) => {
             chai.request(app)
-                .get('/api/v1/admin/users', userController.isAdmin)
+                .get('/api/v1/admin/users')
                 .send({ email: 'admin@gmail.com' })
                 .end((err, res) => {
                     res.should.have.status(200);
