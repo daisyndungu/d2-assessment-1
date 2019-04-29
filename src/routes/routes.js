@@ -19,7 +19,7 @@ router.delete('/admin/movies/:id', User.isAdmin, Movie.deleteMovieByID);
 router.delete('/admin/movies', User.isAdmin, Movie.deleteByCategory);
 
 router.put('/admin/movies/:id', User.isAdmin, Movie.editMovieRecord);
-// router.put('/admin/movies/:id/showings', User.isStaff, Movie.editMovieShowingTimeAndNo);
+router.put('/admin/movies/:id/showings', User.isStaff, Movie.editMovieShowingTimeOrNo);
 
 router.get('/admin/movies', User.isStaff, Movie.displayAllMovies);
 router.get('/movies', User.isUser, Movie.displayAllActiveMovies);

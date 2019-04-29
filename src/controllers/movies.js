@@ -78,6 +78,36 @@ function editMovieRecord(req, res){
     });
 }
 
+function editMovieShowingTimeOrNo(req, res){
+    Movie.find({ _id: req.params.id}, (err, movie) => {
+        if(movie){
+            const item = movie[0];
+            if (req.body.showingTime && req.body.showingNo && req.body.showingTime.length <= req.body.showingNo){
+                item.showingNo = req.body.showingNo;
+                item.showingTime = req.body.showingTime;
+                item.save((err, movie) =>{
+                    if(movie) return res.status(200).send({message: "Movie record updated successfully", movie});
+                    if (err) return res.status(400).send({ message: "Unable to update movie record", err });
+                });
+            } else if (req.body.showingTime && !req.body.showingNo && req.body.showingTime.length <= item.showingNo){
+                item.showingTime = req.body.showingTime;
+                item.save((err, movie) => {
+                    if (movie) return res.status(200).send({ message: "Movie record updated successfully", movie });
+                    if (err) return res.status(400).send({ message: "Unable to update movie record", err });
+                });
+            } else if (!req.body.showingTime && req.body.showingNo && req.body.showingNo < item.showingTime.length){
+                return res.status(400).send({
+                    message: "There are more movies showing times saved than the indicated showing number. Update both entries"
+                });
+            } else {
+                return res.status(400).send({ message: "Provide showing number, showing times or both. Ensure that the number of showing time does not exceed showing no" });
+            }
+        } else {
+            return res.status(400).send({ message: "Item not found", err });
+        }
+    });
+}
+
 function deleteMovieByID(req, res) {
     const currentDate = new Date();
     Movie.findByIdAndDelete({_id: req.params.id})
@@ -119,4 +149,8 @@ function getAllMoviesByActor(req, res){
     });
 }
 
-module.exports = { addNewMovieRecord, displayAllMovies, getMovieByID, editMovieRecord, deleteMovieByID, deleteByCategory, getAllMoviesByActor, displayAllActiveMovies}
+module.exports = {
+    addNewMovieRecord, displayAllMovies, getMovieByID,
+    editMovieRecord, deleteMovieByID, deleteByCategory,
+    getAllMoviesByActor, displayAllActiveMovies, editMovieShowingTimeOrNo
+}
