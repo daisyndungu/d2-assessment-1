@@ -29,7 +29,7 @@ function isAdmin(req, res, next) {
             } else if (user && user[0].permissions === 'admin'){
                 next();
             } else {
-                return res.status(400).send({message: 'Unathorized user', err})
+                return res.status(401).send({message: 'Unathorized user', err})
             }
         });
     } else {
@@ -46,9 +46,11 @@ function isStaff(req, res, next) {
                 // Admin has rights to perform operationst that a staff can perform
                 next();
             } else {
-                return res.status(400).send({ message: 'Unathorized user', err })
+                return res.status(401).send({ message: 'Unathorized user', err })
             }
         });
+    } else {
+        return res.status(400).send({ message: 'Please provide user email' })
     }
 }
 
@@ -60,9 +62,11 @@ function isUser(req, res, next) {
             } else if (user) {
                 next();
             } else {
-                return res.status(400).send({ message: 'Unathorized user', err })
+                return res.status(401).send({ message: 'Unathorized user', err })
             }
         });
+    } else {
+        return res.status(400).send({ message: 'Please provide user email' })
     }
 }
 
